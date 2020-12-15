@@ -1,0 +1,641 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Quest mobile</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="font/material-icons.css"> 
+</head>
+<body> 
+
+  <section class="inicio">
+    <header>
+      <img src="img/info-button.png" class="info" alt="">
+      <button class="material-icon">volume_off</button>
+    </header>
+    <img src="img/logoo.png" alt="" class="logo">
+    <button class="inicio">Iniciar</button>
+  </section>
+
+  <section class="info">
+    <header>
+      <img src="img/left-arrow.png" class="voltar" alt="">
+    </header>
+    <h1>Quest Mobile</h1>
+    <h3>Como jogar?</h3>
+    <h5>Inspirado no jogo de tabuleiro Quest, a aplicação consiste em um jogo de perguntas e respostas sobre 
+      conhecimentos gerais separados em 6 categorias. Cada categoria tem 10 perguntas que vão gerar a sua pontuação.</h5>
+  </section>
+
+  <section class="tela2"> 
+    <img src="img/logo2.png" alt="" class="logo">
+    <h3>Escolha uma categoria</h3>
+    <div class="icones">
+    <ul>
+      <li>
+        <img class="mundo" src="img/os icones perfeitos/globe (1).png">
+        <h4>Mundo</h4>
+      </li>
+      <li>
+        <img class="ciencias" src="img/os icones perfeitos/insight.png">
+        <h4>Ciências</h4>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <img class="artes" src="img/os icones perfeitos/painting.png">
+        <h4>Artes</h4>
+      </li>
+      <li>
+        <img class="esportes" src="img/os icones perfeitos/sports.png">
+        <h4>Esportes</h4>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <img class="sociedade" src="img/pencil.png">
+        <h4>Sociedade</h4>
+      </li>
+      <li>
+        <img class="variedades" src="img/os icones perfeitos/lesson.png">
+        <h4>Variedades</h4>
+      </li>
+    </ul>
+  </div>
+  </section>
+
+  <section class="perguntas">
+    <header>
+      <img src="img/logoo.png" alt="" class="logo">
+      <h1 class="titulo"></h1>
+    </header>
+    <div class="centro">
+      <div class="tempo">
+        <h1>
+          Tempo: 0<span class="minuto">0</span> :
+          <span class="segundo">00</span>
+        </h1> 
+        <h1>Pontos: <span class="pontos">0</span></h1>
+      </div>
+      <h3>QUESTÃO <span class="numeroQuestao"></span> </h3>
+        <h3><p class="pergunta"></p></h3>
+
+      <ul>
+       <li>a)<button class="altA resposta"></button></li>
+       <li>b)<button class="altB resposta"></button></li>
+       <li>c)<button class="altC resposta"></button></li>
+       <li>d)<button class="altD resposta"></button></li>
+       <li>e)<button class="altE resposta"></button></li>
+       <li><button class="certa"></button></li>
+       <li><h4 class="dicas">Dica: <span class="dica"></span></h4></li>
+      </ul>
+      
+    </div>
+    <footer>
+      <span class="material-icon home">home</span>
+      <span class="material-icon som" >volume_off</span><!-- volume_off  -->
+      <span class="material-icon ajuda" >help_outline</span>
+  </footer>
+  </section>
+
+  <section class="final">
+    <img src="img/winner.png" alt="" class="vencer">
+    <h3>Parabéns Pelo Seu Desempenho!</h3>
+    <h4>Sua pontuação foi: <span class="acertos"></span></h4>
+    <h4>Seu tempo foi: <span class="minuto"></span>:<span class="segundo"></span> segundos</h4>
+    <button class="novamente">Jogar novamente</button>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+    musicaInicio = new Audio('musica/inicio.mp3');
+    
+    $("section.inicio button.material-icon").on("click", function(){
+      textoDoBotao = $(this).text();
+      if(textoDoBotao == "volume_off"){
+        musicaInicio.play();
+        $(this).text("volume_up");
+      } else {
+        musicaInicio.pause();
+        $(this).text("volume_off");
+      }
+    });
+    
+    $("section.inicio button.inicio").on("click", function(){
+      $("section").hide();
+      $("section.tela2").show();
+    });
+
+    $("section.inicio img.info").on("click", function(){
+      $("section").hide();
+      $("section.info").show();
+    });
+
+    $("section.info img.voltar").on("click", function(){
+      $("section").hide();
+      $("section.inicio").show();
+    });
+
+    $("section.tela2 ul li img").on("click", function(){
+      $("section").hide();
+      $("section.perguntas").show();
+      musicaInicio.pause();
+      contAjuda = 0;
+      
+      var tempo = $(".tempo").text();
+      tempoMinuto = 0;
+      tempoSegundo = 0;
+      contagem = setInterval(function(){
+        var OQueTemAntesSegundo = parseInt($("h1 span.segundo").text());
+        tempoSegundo =  OQueTemAntesSegundo + 1;
+        $("h1 span.segundo").text(tempoSegundo);
+        if(OQueTemAntesSegundo + 1 >= 60){
+          var OQueTemAntesMinuto = parseInt($("h1 span.minuto").text());
+          tempoMinuto = OQueTemAntesMinuto + 1;
+          $("h1 span.minuto").text(tempoMinuto);
+          $("h1 span.segundo").text("00");
+        }
+        $("h4 span.minuto").text(tempoMinuto);
+        $("h4 span.segundo").text(tempoSegundo);
+      }, 1000);  
+    
+    });
+
+    cont = 0;
+    $("section.tela2 ul li img.mundo").on("click", function(){
+      $(".titulo").text("Mundo");
+      perguntarMundo();
+      $(".resposta").on("click",function(){
+      const textoResposta = $(this).text();
+      const textoCerto = $(this).parent().parent().find(".certa").text();
+      cont ++;
+      if (cont<=10) {
+      $(".numeroQuestao").text(cont);  
+      if(textoResposta == textoCerto){
+        var acertos = parseInt($(".pontos").text());
+        var soma = 0;
+        soma = acertos + 1;
+        $(".pontos").text(soma);
+        $(".acertos").text(soma);
+        perguntarMundo();
+        $(".dica").text("");
+      }else{
+        perguntarMundo();
+        $(".dica").text("");
+      }
+      }else{
+        if(textoResposta == textoCerto){
+        var acertos = parseInt($(".pontos").text());
+        var soma = 0;
+        soma = acertos + 1;
+        $(".pontos").text(soma);
+        $(".acertos").text(soma);
+        }
+        $("section").hide();
+        $("section.final").show();
+        clearInterval(contagem);
+        setInterval(function(){
+           $("section.final img.vencer").animate({top:"-15px"},500).
+           animate({top:"0px"},500);
+          },500);
+      }
+
+      });
+    });
+
+   
+
+    cont = 0;
+    $("section.tela2 ul li img.ciencias").on("click", function(){
+      $(".titulo").text("Ciências");
+      contAjuda = 0;
+      perguntarCiencia();
+      $(".resposta").on("click",function(){
+      const textoResposta = $(this).text();
+      const textoCerto = $(this).parent().parent().find(".certa").text();
+      cont ++;
+      if (cont<=10) {
+      $(".numeroQuestao").text(cont);  
+      if(textoResposta == textoCerto){
+        var acertos = parseInt($(".pontos").text());
+        var soma = 0;
+        soma = acertos + 1;
+        $(".pontos").text(soma);
+        $(".acertos").text(soma);
+        $(".dica").text("");
+        perguntarCiencia();
+      }else{
+        $(".dica").text("");
+        perguntarCiencia();
+      }
+      }else{
+        if(textoResposta == textoCerto){
+        var acertos = parseInt($(".pontos").text());
+        var soma = 0;
+        soma = acertos + 1;
+        $(".pontos").text(soma);
+        $(".acertos").text(soma);
+        }
+        $("section").hide();
+        $("section.final").show();
+        clearInterval(contagem);
+        setInterval(function(){
+           $("section.final img.vencer").animate({top:"-15px"},500).
+           animate({top:"0px"},500);
+          },500);
+      }
+
+      });
+    });
+
+
+    cont = 0;
+    $("section.tela2 ul li img.artes").on("click", function(){
+      $(".titulo").text("Artes");
+      contAjuda = 0;
+      perguntarArtes();
+      $(".resposta").on("click",function(){
+      const textoResposta = $(this).text();
+      const textoCerto = $(this).parent().parent().find(".certa").text();
+      cont ++;
+      if (cont<=10) {
+      $(".numeroQuestao").text(cont);  
+      if(textoResposta == textoCerto){
+        var acertos = parseInt($(".pontos").text());
+        var soma = 0;
+        soma = acertos + 1;
+        $(".pontos").text(soma);
+        $(".acertos").text(soma);
+        $(".dica").text("");
+        perguntarArtes();
+      }else{
+        $(".dica").text("");
+        perguntarArtes();
+      }
+      }else{
+        if(textoResposta == textoCerto){
+        var acertos = parseInt($(".pontos").text());
+        var soma = 0;
+        soma = acertos + 1;
+        $(".pontos").text(soma);
+        $(".acertos").text(soma);
+        }
+        $("section").hide();
+        $("section.final").show();
+        clearInterval(contagem);
+        setInterval(function(){
+           $("section.final img.vencer").animate({top:"-15px"},500).
+           animate({top:"0px"},500);
+          },500);
+      }
+
+      });
+    });
+
+    
+    cont = 0;
+    $("section.tela2 ul li img.esportes").on("click", function(){
+      contAjuda = 0;
+      $(".titulo").text("Esportes");
+      perguntarEsportes();
+      $(".resposta").on("click",function(){
+      const textoResposta = $(this).text();
+      const textoCerto = $(this).parent().parent().find(".certa").text();
+      cont ++;
+      if (cont<=10) {
+      $(".numeroQuestao").text(cont);  
+      if(textoResposta == textoCerto){
+        var acertos = parseInt($(".pontos").text());
+        var soma = 0;
+        soma = acertos + 1;
+        $(".pontos").text(soma);
+        $(".acertos").text(soma);
+        perguntarEsportes();
+        $(".dica").text("");
+      }else{
+        perguntarEsportes();
+        $(".dica").text("");
+      }
+      }else{
+        if(textoResposta == textoCerto){
+        var acertos = parseInt($(".pontos").text());
+        var soma = 0;
+        soma = acertos + 1;
+        $(".pontos").text(soma);
+        $(".acertos").text(soma);
+        }
+        $("section").hide();
+        $("section.final").show();
+        clearInterval(contagem);
+        setInterval(function(){
+           $("section.final img.vencer").animate({top:"-15px"},500).
+           animate({top:"0px"},500);
+          },500);
+      }
+
+      });
+    });
+
+    cont = 0;
+    $("section.tela2 ul li img.sociedade").on("click", function(){
+      $(".titulo").text("Sociedade");
+      contAjuda = 0;
+      perguntarSociedade();
+      $(".resposta").on("click",function(){
+      const textoResposta = $(this).text();
+      const textoCerto = $(this).parent().parent().find(".certa").text();
+      cont ++;
+      if (cont<=10) {
+      $(".numeroQuestao").text(cont);  
+      if(textoResposta == textoCerto){
+        var acertos = parseInt($(".pontos").text());
+        var soma = 0;
+        soma = acertos + 1;
+        $(".pontos").text(soma);
+        $(".acertos").text(soma);
+        perguntarSociedade();
+        $(".dica").text("");
+      }else{
+        perguntarSociedade();
+        $(".dica").text("");
+      }
+      }else{
+        if(textoResposta == textoCerto){
+        var acertos = parseInt($(".pontos").text());
+        var soma = 0;
+        soma = acertos + 1;
+        $(".pontos").text(soma);
+        $(".acertos").text(soma);
+        }
+        $("section").hide();
+        $("section.final").show();
+        clearInterval(contagem);
+        setInterval(function(){
+           $("section.final img.vencer").animate({top:"-15px"},500).
+           animate({top:"0px"},500);
+          },500);
+      }
+      });
+    });
+
+
+    cont = 0;
+    $("section.tela2 ul li img.variedades").on("click", function(){
+      $(".titulo").text("Variedades");
+      contAjuda = 0;
+      perguntarVariedades();
+      $(".resposta").on("click",function(){
+      const textoResposta = $(this).text();
+      const textoCerto = $(this).parent().parent().find(".certa").text();
+      cont ++;
+      if (cont<=10) {
+      $(".numeroQuestao").text(cont);  
+      if(textoResposta == textoCerto){
+        var acertos = parseInt($(".pontos").text());
+        var soma = 0;
+        soma = acertos + 1;
+        $(".pontos").text(soma);
+        $(".acertos").text(soma);
+        perguntarVariedades();
+        $(".dica").text("");
+      }else{
+        perguntarVariedades();
+        $(".dica").text("");
+      }
+      }else{
+        if(textoResposta == textoCerto){
+        var acertos = parseInt($(".pontos").text());
+        var soma = 0;
+        soma = acertos + 1;
+        $(".pontos").text(soma);
+        $(".acertos").text(soma);
+        }
+        $("section").hide();
+        $("section.final").show();
+        clearInterval(contagem);
+        setInterval(function(){
+           $("section.final img.vencer").animate({top:"-15px"},500).
+           animate({top:"0px"},500);
+          },500);
+      }
+
+      });
+    });
+
+
+    sorteados = [];
+    cont = 1;
+    contAjuda = 0;
+    function perguntarMundo(){
+      let perguntas = ["Qual das alternativas contém apenas nomes de rios?","O que são Itaipu, Tucuruí e Furnas?", "Em 1940, a França foi invadida por qual país?","Qual o significado das setas do símbolo internacional da reciclagem?", "O etanol é produzido através de qual fonte de energia?", "Qual desses não é um instrumento meteorológico?","Em qual das alternativas constam apenas maravilhas do mundo?", "O Dia do Fico é anualmente celebrado em que data?", "Listras azuis e brancas e um sol no canto superior esquerdo caracterizam a bandeira de qual país?","O português é a língua oficial nesses três países:"];
+      let respA = ["São Francisco, Douro, Antártico", "São usinas hidroelétricas", " Inglaterra", "Papel, vidro e metal", "Solar", "Barógrafo","Estátua de Zeus em Olímpia, Cristo Redentor", "7 de setembro","Argentina","Guiné-Bissau", "África do Sul e Brasil"];
+      let respB = ["Nilo, Amazonas, Mississipi", "São rios", "Espanha","Coleta, separação e consumo", "Biomassa", "Termômetro","Pirâmides do Egito, Coliseu de Roma, Cristo Redentor", "19 de novembro","Brasil","Guiné Equatorial, Cabo Verde e Angola"];
+      let respC = ["Cáspio, Vermelho, Reno","São países","Portugal","Papel, vidro e plástico", "Eólica", "Pluviômetro","Muralha da China, Taj Mahal", "9 de janeiro","Uruguai","Venezuela, Angola e Portugal"];
+      let respD = ["Tocantins, Bering, Ganges","São cidades","Alemanha","Fabricação, utilização e reutilização", "Geotérmica", "Anemômetro","Torre Eiffel, Colosso de Rodes", "19 de abril","Namíbia","Macau, Timor-Leste e Moçambique"];
+      let respE = ["Danúbio, Jordão, Morto","São mares","União Soviética ","Lixo, reaproveitamento e fabricação", "Hidrelétrica", "Etilômetro","Big Ben, Torre de Pisa", "1º de maio","Japão","Argentina, São Tomé e Príncipe e Guiné Equatorial"];
+      let certa = ["Nilo, Amazonas, Mississipi","São usinas hidroelétricas", "Alemanha", "Fabricação, utilização e reutilização", "Biomassa", "Etilômetro", "Pirâmides do Egito, Coliseu de Roma, Cristo Redentor", "9 de janeiro","Uruguai","Guiné Equatorial, Cabo Verde e Angola"];
+      dicas = ["Os três se encaixam na categoria de maiores rios do mundo","Abastecem alguns estados brasileiros", " Foram responsáveis pela segunda guerra mundial","São os três processos que todos os produtos passam"," Essa fonte de energia tem como origem a decomposição de vegetais e animais","Esse instrumento é conhecido popularmente como bafômetro","Elas se encontram respectivamente no Egito, na Itália e no Brasil.","é também o aniversário das cidades catarinenses Balneário Barra do Sul e Famosa do Sul","é quatro vezes campeão mundial, mas duas vezes vencedor da Copa do Mundo FIFA.","Os três países pertencem ao continente africano"];
+
+
+       //Verifica se o numero aleatório já foi sorteado antes
+      do{
+        numeroAleatorio = Math.floor(Math.random() * (perguntas.length - 1 + 1));
+      }while(sorteados.indexOf(numeroAleatorio) != -1)
+      sorteados.push(numeroAleatorio);
+      $(".pergunta").text(perguntas[numeroAleatorio]);
+      $(".altA").text(respA[numeroAleatorio]);
+      $(".altB").text(respB[numeroAleatorio]);
+      $(".altC").text(respC[numeroAleatorio]);
+      $(".altD").text(respD[numeroAleatorio]);
+      $(".altE").text(respE[numeroAleatorio]);
+      $(".certa").text(certa[numeroAleatorio]);
+    }
+
+    function perguntarCiencia(){
+      let perguntas = ["Em Biologia, parasita é um...", "O que são anticorpos?", "Qual das opções abaixo não corresponde a um músculo do corpo humano?", "Qual a unidade que mede a intensidade do som?","Qual dessas aves não voa?","Nesses pares, ambos são mamíferos:","Qual destas, apesar do seu nome, não é considerada um tipo de força?","Qual a ciência que estuda a atmosfera da Terra e a climatologia?","Quantos braços tem um polvo?","Qual das alternativas contém apenas animais cujos esqueletos são externos?"];
+      let respA = ["indivíduo que não gosta de trabalhar", "pessoas que não gostam dos seus corpos", "glúteo", "Decibel","Pinguim","Baleia azul e golfinhos","Força de atrito","Astronomia","Seis","Caracóis, caranguejos e lagostas"];
+      let respB = ["animal que não se movimenta durante 20 horas ao dia", "substâncias da transfusão de sangue", "adutor","Frequência","Galinha","Morcegos e galinhas","Força peso","Metereologia","Oito","Besouros, peixes e formigas"];
+      let respC = ["organismo que vive em associação com outro","vitaminas","costureiro", "Hertz","Cegonha","Girafas e tartarugas","Força centrípeta","Dispersão atmosférica","Dez","Caracóis, lulas e aranhas"];
+      let respD = ["animal que devora outro da mesma espécie","proteínas que atuam no sistema imunológico como defensoras do organismo","sacro","Compasso","Pato", "Porcos e pinguins","Força eletromotriz","Meteorologia","Sete","Borboletas, caranguejos e peixes"];
+      let respE = ["animal que pode viver tanto em terra como na água","conjunto dos membros inferiores do corpo humano","deltoide","Ruído","Peru","Macacos e sapos","Força normal","Horologia","Três","Lagostas, polvos e escorpiões"];
+      let certa = ["organismo que vive em associação com outro", "proteínas que atuam no sistema imunológico como defensoras do organismo", "sacro","Decibel","Pinguim","Baleia azul e golfinhos","Força eletromotriz","Meteorologia","Oito","Caracóis, caranguejos e lagostas"];
+      dicas = ["Eles podem ser encontrados internamente ou externamente de seus hospedeiros.", " A principal função dos anticorpos é neutralizar as toxinas dos parasitas extracelulares.","Uma das opções corresponde a um osso do corpo humano","Essa unidade de medida corresponde a dez vezes o logaritmo de base 10 da razão entre duas quantidades de energia.","As asas desta ave se adaptaram ao nado.","Mamíferos são animais que apresentam duas características marcantes: as presenças de pelos no corpo e de glândulas mamárias, as quais produzem leite.","Esta alternativa não é considerada um tipo de força, pois refere-se ao movimento de vibração de cargas.","Essa ciência, também, estuda as causas das variações climáticas e os fenômenos naturais.","A quantidade de tentáculos de um polvo corresponde a um número múltiplo de 2","Todos são artrópodes "];
+
+
+       //Verifica se o numero aleatório já foi sorteado antes
+      do{
+        numeroAleatorio = Math.floor(Math.random() * (perguntas.length - 1 + 1));
+      }while(sorteados.indexOf(numeroAleatorio) != -1)
+      sorteados.push(numeroAleatorio);
+      $(".pergunta").text(perguntas[numeroAleatorio]);
+      $(".altA").text(respA[numeroAleatorio]);
+      $(".altB").text(respB[numeroAleatorio]);
+      $(".altC").text(respC[numeroAleatorio]);
+      $(".altD").text(respD[numeroAleatorio]);
+      $(".altE").text(respE[numeroAleatorio]);
+      $(".certa").text(certa[numeroAleatorio]);
+    }
+
+    function perguntarArtes(){
+      let perguntas = ["A quem foi atribuído pela primeira vez o Prêmio Nobel da Paz?","Qual desses autores brasileiros escreveu O Guarani e O Gaúcho?", "Este é um exemplo de palíndromo:", "Homem Vitruviano é um desenho de qual artista famoso?","As cantigas de Escárnio e Maldizer pertencem a qual escola literária?", "Que autor da antiguidade clássica escreveu As Bacantes?","Qual era o deus romano do amor?", "Que personagem da mitologia grega era metade homem metade cavalo?","Qual a nacionalidade do sociólogo e filósofo Durkheim?", "Lady Di era o apelido de qual personalidade?"];
+      let respA = ["Martin Luther King Jr.", "Aluísio de Azevedo", "Roma é amor.", "Leonardo da Vinci","Quinhentismo", "Homero","Eros", "Tártaro","Alemã", "Chiquinha Gonzaga"];
+      let respB = ["Henri Becquerel e Marie Curie", "José de Alencar", "O rato roeu a roupa do rei de Roma.", "Donatello","Classicismo", "Eurípides","Apolo", "Gigante","Francesa", "Joana d’Arc"];
+      let respC = ["Madre Teresa de Calcutá","Gonçalves Dias","Quem tem boca vai à Roma.", "Michelangelo","Barroco", "Sófocles","Baco", "Centauro","Inglesa", "Carlota Joaquina"];
+      let respD = ["Frédéric Passy","José de Anchieta","O que é, o que é? Feito para andar e não anda?","William Shakespeare","Trovadorismo", "Ésquilo","Cupido", "Górgona","Italiana", "Diana, a Princesa de Gales"];
+      let respE = ["Frédéric Passy e Henry Dunant","Gonçalves de Magalhães","Uni, duni, tê, Salamê, mingüê, Um sorvete colorê, O escolhido foi você!", "Van Gogh","Modernismo", "Plutarco","Júpiter", "Sátiro","Norueguesa", "Grace Kelly"];
+      let certa = ["Frédéric Passy e Henry Dunant", "José de Alencar", "Roma é amor.", "Leonardo da Vinci","Trovadorismo", "Eurípides","Cupido", "Centauro","Francesa", "Diana, a Princesa de Gales"];
+      dicas = ["Um fundou a Sociedade Francesa de Arbitragem entre as Nações e o outro o Comitê Internacional da Cruz Vermelha.","Sua obras foram marcadas por temáticas voltadas para o nacionalismo, a história e a cultura popular brasileira.", " Palíndromo é uma frase ou palavra que se pode ler, indiferentemente, da esquerda para a direita ou vice-versa."," Pintou também a Monalisa e a última ceia","Foi o primeiro movimento literário e aconteceu durante a Idade Média ","Presente em vários filmes juntando casais","Surgiu de uma união proibida entre Íxion, rei da Tessália, e a deusa Hera, mulher de Zeus.","Surgiu de uma união proibida entre Íxion, rei da Tessália, e a deusa Hera, mulher de Zeus.","Foi um dos fundadores da sociologia no seu país","Causou uma enorme repercussão ao se separar do marido e morreu em 1997 em um acidente de carro"];
+      //Verifica se o numero aleatório já foi sorteado antes
+      do{
+        numeroAleatorio = Math.floor(Math.random() * (perguntas.length - 1 + 1));
+      }while(sorteados.indexOf(numeroAleatorio) != -1)
+      sorteados.push(numeroAleatorio);
+      $(".pergunta").text(perguntas[numeroAleatorio]);
+      $(".altA").text(respA[numeroAleatorio]);
+      $(".altB").text(respB[numeroAleatorio]);
+      $(".altC").text(respC[numeroAleatorio]);
+      $(".altD").text(respD[numeroAleatorio]);
+      $(".altE").text(respE[numeroAleatorio]);
+      $(".certa").text(certa[numeroAleatorio]);
+    }
+   
+
+
+    function perguntarEsportes(){
+      let perguntas = ["Que país iria sediar as Olimpíadas de 2020?","Qual das alternativas apresenta os motivos de cancelamento das Olimpíadas de 1916, 1940 e 1944?", "Quem venceu a Champions League de 2008?", "Quem venceu a Copa do Mundo de 1950?", "Quais os maiores campeões do Campeonato Brasileiro?", "No campeonato mundial de vôlei feminino realizado aqui no Brasil em 1994, a seleção brasileira conquistava a sua primeira medalha na historia da competição. qual a cor dessa medalha conquistada?", " A seleção brasileira de basquete feminino, conquistou o campeonato mundial de basquete em 1994, realizado na Austrália. Qual foi a seleção que o Brasil derrotou na final?", "Qual país mais conseguiu medalhas na ginástica artística feminina nos Jogos Rio 2016?", "Em que pais foi inventado o basquete? ", "Quando foi disputada a primeira partida de futebol no Brasil?"];
+      let respA = [" Catar","Atrasos nas obras dos estádios", "Real Madrid", "Alemanha", "Santos e Palmeiras", "Ouro", "Estados Unidos", "Brasil", "Brasil", "15 de outubro de 1910"];
+      let respB = ["Rússia"," Roubo da tocha olímpica", " Manchester United", "Uruguai ", "Corinthians e Grêmio", "Prata", "Rússia", "Rússia", "China", "24 de fevereiro de 1887"];
+      let respC = [" França"," Roubo da tocha olímpica", "Chelsea", "Itália", "Fluminense e Vasco", "Diamante", "Cuba", "Estados Unidos ", "Canadá", " 14 de abril de 1895"];
+      let respD = ["Estados Unidos","Primeira e Segunda guerras mundiais", "Barcelona", "China", "São Paulo e Palmeiras", "Transparente", "China", "Japão", " Estados Unidos", " 9 de janeiro de 1892"];
+      let respE = ["Japão","Falta de financiamento", "Zenit", " Brasil", "Corinthians e Flamengo", "Bronze", "Austrália", "Alemanha", "Inglaterra", "2 de agosto de 1921"];
+      let certa = ["Japão","Primeira e Segunda guerras mundiais", "Zenit", "Uruguai ", "Santos e Palmeiras", "Ouro", "China", "Estados Unidos ", " Estados Unidos", " 14 de abril de 1895"];
+      dicas = ["Tal país localiza-se  no continente Asiático","O cancelamento das Olimpíadas nos anos de 1916, 1940 e 1944 ocorreu em decorrência de momentos que, posteriormente,marcaram a história do mundo.","É uma equipe de futebol russa que representa a cidade de São Petersburgo.","País pertencente à América do Sul.","Ambos times possuem nomes de cidades","Elemento químico pertencente aos metais nobres","Tal país localiza-se  no continente Asiático","O país é considerado o mais influente do mundo e exerce forte domínio político, econômico, militar e cultural.","Tal país é constituído  50 estados, sendo um deles o Havaí","A revolução federalista é derrotada pelas tropas republicanas neste mesmo ano"];
+      //Verifica se o numero aleatório já foi sorteado antes
+      do{
+        numeroAleatorio = Math.floor(Math.random() * (perguntas.length - 1 + 1));
+      }while(sorteados.indexOf(numeroAleatorio) != -1)
+      sorteados.push(numeroAleatorio);
+      $(".pergunta").text(perguntas[numeroAleatorio]);
+      $(".altA").text(respA[numeroAleatorio]);
+      $(".altB").text(respB[numeroAleatorio]);
+      $(".altC").text(respC[numeroAleatorio]);
+      $(".altD").text(respD[numeroAleatorio]);
+      $(".altE").text(respE[numeroAleatorio]);
+      $(".certa").text(certa[numeroAleatorio]);
+    } 
+  
+
+    function perguntarSociedade(){
+      let perguntas = ["Sobre a democracia no Brasil pode-se afirmar que:","O esquema funcionava através da superfaturação de obras que faziam parte de um programa que tinha como objetivo acelerar o crescimento econômico no País. Essa descrição corresponde a uma operação criminosa no Brasil. Trata-se da:", " Quais os países que mais têm recebido refugiados sírios?", "Qual a função da ONU?", "Qual a primeira mulher a ganhar um prêmio Nobel?", "Em que governo brasileiro foi sancionada a lei das cotas para o ensino superior?", "O que estuda a etnologia?", "A relação entre o indivíduo e a sociedade é um tema fundamental nas:", "Qual ação é determinada por afetos ou estados emocionais?", "Qual é o prato consumido diariamente pela maioria dos brasileiros?"];
+      let respA = ["Foi instituída na primeira república com o voto de cabresto.","Operação Lava Jato", "Turquia e Líbano", "Zelar pela cultura em todas as nações", "Madre Teresa de Calcutá", "Governo de Dilma Rousseff", " Estuda fatos e documentos levantados pela etnologia no âmbito da antropologia cultural e social ", "Relações sociais", "Ação afetiva", "Arroz com feijão"];
+      let respB = ["Consolidada com a promulgação da constituição de 1988.","Operação Greenfield", "Alemanha e França", "Unir as nações com o objetivo de manter a paz e a segurança mundial", "Elizabeth Blackweel", "Governo de José Sarney", "Estuda o indivíduo e a sociedade", " Ciências sociais", "Ação racional orientada a valores", " Pizza"];
+      let respC = ["Surgiu na Era Vargas","Operação Navalha", "Jordânia e Sérvia", "Financiar países em desenvolvimento", "Irène Joliot-Curie", "Governo de Luís Inácio Lula da Silva", "Estuda a diversidade cultural", "Ações sociais", "Ação tradicional", "Sopa"];
+      let respD = ["Surgiu na ditadura militar no Brasil.","Operação Panatenaico", "Iraque e Suécia","Regular o funcionamento do sistema financeiro a nível internacional","Valentina Tereshkova", "Governo de Fernando Henrique", "Estuda as tribos urbanas", "Classes sociais", "Ação racional orientada a fins","Hambúrguer"];
+      let respE = ["Foi garantida a todos no governo de FHC.","Operação Carne Fraca", "Turquia e Egito", "Gerenciar acordos de comércio entre os países", "Marie Curi", "Governo de Tancredo Neves", "Estuda economia, política e moral de uma sociedade", "Estruturas sociais ", "Ação social", "Macarrão"];
+      let certa = ["Consolidada com a promulgação da constituição de 1988.","Operação Navalha", "Turquia e Líbano", "Unir as nações com o objetivo de manter a paz e a segurança mundial", "Marie Curi", "Governo de Luís Inácio Lula da Silva", "Estuda fatos e documentos levantados pela etnologia no âmbito da antropologia cultural e social", "Ciências sociais", "Ação afetiva", "Arroz com feijão"];
+      dicas = ["Promulgada no dia 5 de outubro, marcou o processo de redemocratização do Brasil.","Esta Operação foi deflagrada pela Polícia Federal do Brasil no dia 17 de maio de 2007.","Ambos países localizam-se no continente Asiático","A motivação para a sua criação está relacionada com os conflitos internacionais que destruíram diversos territórios e vitimaram milhares de pessoas.","Esta mulher descobriu os elementos rádio e polônio, ademais foi a única pessoa no mundo com dois Nobel em áreas científicas diferentes","Tal governo durou de 2003 à 2011","Exemplo empregado em frase: Em 2002, foi a vez do pós-doutorado em etnologia afro-brasileira pelo Museu de Arqueologia e Etnologia da USP. -Folha de S.Paulo, 29/01/2011","estuda os aspectos sociais do mundo humano", "Conduta movida por sentimentos, quando as ações são tomadas devido às emoções do indivíduo. ",  "prato típico do Brasil, fruto de uma combinação. "];
+      do{
+        numeroAleatorio = Math.floor(Math.random() * (perguntas.length - 1 + 1));
+      }while(sorteados.indexOf(numeroAleatorio) != -1)
+      sorteados.push(numeroAleatorio);
+      $(".pergunta").text(perguntas[numeroAleatorio]);
+      $(".altA").text(respA[numeroAleatorio]);
+      $(".altB").text(respB[numeroAleatorio]);
+      $(".altC").text(respC[numeroAleatorio]);
+      $(".altD").text(respD[numeroAleatorio]);
+      $(".altE").text(respE[numeroAleatorio]);
+      $(".certa").text(certa[numeroAleatorio]);
+      
+    }
+
+
+    function perguntarVariedades(){
+      let perguntas = ["No vôlei, qual o jogador que fica no fundo da quadra e não saca?","Em qual das alternativas os dois filmes tem como tema a Segunda Guerra Mundial", "Segundo Pitágoras,  A2 + B2 é igual a que?", "Que povo foi o primeiro a utilizar a bússola?", "As pessoas podem compartilhar:", "Quantas medalhas a natação brasileira ganhou em 2016?", "Quem é a primeira santa nascida no Brasil, canonizada em 2019?", "O que é Ortorexia?", "Segundo que meridiano acertamos os nossos relógios?", "Qual destes itens NÃO é uma característica da cultura?"];
+      let respA = ["Levantador", "Sonho de uma Noite de Verão e Macbeth: Ambição e Guerra", "AB", "gregos", "crenças", "1", "Santa Dulce dos Pobres", "Transtorno alimentar caracterizado pela perda de apetite", "Meridiano Central", "lingua"];
+      let respB = ["Líbero", "A Batalha de Passchendaele e Cavalo de Guerra", "B4", "romanos", "valores", "2", "Nossa Senhora Aparecida", "Obsessão pelo consumo de alimentos saudáveis", "Meridiano do Equador", "arquitetura"];
+      let respC = ["Oposto","O Império do Sol e A vida é bela","B3", "chineses", "comportamentos", "3", "Rainha Santa Isabel", "Obsessão em falar de forma correta", "Meridiano da Terra", "musica"];
+      let respD = ["Central","Anti-herói e Meia-noite em Paris","C2", "mesopotâmicos", "culturas", "4", "Madre Teresa de Calcutá", "Preocupação exagerada em ter um corpo elegante", "Meridiano de Greenwich", "danças"];
+      let respE = ["Ponteiro","Estrelas além do tempo e Pantera negra","B2", "egípcios", "todas as anteriores", "Nenhuma", "Nossa Senhora de Guadalupe", "Distúrbio alimentar que provoca a ingestão excessiva de alimentos", "Meridiano Internacional", "cuidados de saúde"];
+      let certa = ["Líbero", "O Império do Sol e A vida é bela", "C2", "chineses", "todas as anteriores", "Nenhuma", "Santa Dulce dos Pobres", "Obsessão pelo consumo de alimentos saudáveis", "Meridiano de Greenwich", "cuidados de saúde"];
+      dicas = ["Joga com uma camiseta diferente dos demais ","Os dois filmes são um romance", "É conhecido como teorema de pitágoras e é usado para calcular o valor de um dos lados de um triângulo","Esse povo também inventou o papel, o dominó e a escova de dentes.","É cultura.","Foi uma grande decepção ","Ela criou casas de apoio para as pessoas e cuidava dos enfermos.","Pode resultar em anemia e avitaminose","Divide o globo terrestre entre ocidente e oriente ","Cultura representa um conjunto de tradições, crenças e costumes de determinado grupo social."];
+      do{
+        numeroAleatorio = Math.floor(Math.random() * (perguntas.length - 1 + 1));
+      }while(sorteados.indexOf(numeroAleatorio) != -1)
+      sorteados.push(numeroAleatorio);
+      $(".pergunta").text(perguntas[numeroAleatorio]);
+      $(".altA").text(respA[numeroAleatorio]);
+      $(".altB").text(respB[numeroAleatorio]);
+      $(".altC").text(respC[numeroAleatorio]);
+      $(".altD").text(respD[numeroAleatorio]);
+      $(".altE").text(respE[numeroAleatorio]);
+      $(".certa").text(certa[numeroAleatorio]);
+    } 
+
+    $("section.perguntas footer span.ajuda").on("click", function(){
+        contAjuda = contAjuda+1;  
+        if (contAjuda<=3) {
+          $(".dica").text(dicas[numeroAleatorio]);
+        } else{
+          $(".dica").text("Suas dicas se esgotaram");
+        }
+        
+        });
+
+    $("section.perguntas footer span.home").on("click", function(){
+      $("section").hide();
+      $("section.inicio").show();
+      window.location.reload();
+      clearInterval(contagem);
+          sorteados = [];
+          cont = 1;
+          contAjuda = 0;
+          numeroAleatorio = 0;
+      $("h4 span.minuto").text("00");
+      $("h4 span.segundo").text("00");
+      musicaJogo.pause();
+    });
+
+
+    musicaJogo = new Audio('musica/jogo.mp3');
+    $("section.perguntas footer span.som").on("click", function(){
+      textoDoBotao = $(this).text();
+      if(textoDoBotao == "volume_off"){
+        musicaJogo.play();
+        $(this).text("volume_up");
+      } else {
+        musicaJogo.pause();
+        $(this).text("volume_off");
+      }
+    });
+
+
+    $(".novamente").on("click", function(){
+      $("section").hide();
+      $("section.inicio").show();
+      window.location.reload();
+      clearInterval(contagem);
+          sorteados = [];
+          cont = 1;
+          contAjuda = 0;
+          numeroAleatorio = 0;
+      $("h4 span.minuto").text("00");
+      $("h4 span.segundo").text("00");
+      musicaJogo.pause();
+    });
+
+    // $("").on("click", function(){
+    // });
+
+  </script>
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>
